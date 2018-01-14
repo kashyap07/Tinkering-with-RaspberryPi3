@@ -55,11 +55,15 @@ def turn_on():
 	print('LED ON')
 	GPIO.output(18, GPIO.HIGH)
 
+	return 200
+
 
 @app.route('/turnoff')
 def turn_off():
 	print('LED OFF')
 	GPIO.output(18, GPIO.LOW)
+
+	return 200
 
 
 

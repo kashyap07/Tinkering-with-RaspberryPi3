@@ -16,8 +16,8 @@
 		<div class="container">
 			<div class="jumbotron text-center">
 				<div class="mid-please">
-					<button class="btn btn-large" onclick="turnon()">ON</button>
-					<button class="btn btn-large btn-primary" onclick="turnoff()">OFF</button>
+					<button id="on-btn" class="btn btn-large" onclick="turnon()">ON</button>
+					<button id="off-btn" class="btn btn-large btn-primary" onclick="turnoff()">OFF</button>
 				</div>
 			</div>
 		</div>
@@ -27,12 +27,18 @@
 				var xhr = new XMLHttpRequest();
 				xhr.open("GET", "/turnon", false);
 				xhr.send();
+
+				$('#off-btn').removeClass('btn-primary');
+				$('#on-btn').addClass('btn-primary');
 			}
 
 			function turnoff() {
 				var xhr = new XMLHttpRequest();
 				xhr.open("GET", "/turnoff", false);
 				xhr.send();
+
+				$('#on-btn').removeClass('btn-primary');
+				$('#off-btn').addClass('btn-primary');
 			}
 
 		</script>
