@@ -17,6 +17,6 @@ sleep(0.5)
 camera.capture('test.jpg')
 
 
-url = '192.168.0.107/sendphoto'
+url = 'htpp://192.168.0.107:8000/sendphoto'
 files = {'media': open('test.jpg', 'rb')}
 requests.post(url, files=files)

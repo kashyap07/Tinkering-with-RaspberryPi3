@@ -17,6 +17,10 @@ app = Flask(__name__)
 # index route
 @app.route('/')
 def index():
+	data = request.get_json()
+
+	print(data)
+	
 	return render_template('index.html')
 
 # camera page web view
