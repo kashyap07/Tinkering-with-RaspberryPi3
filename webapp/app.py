@@ -12,6 +12,8 @@ from pprint import pprint
 import RPi.GPIO as GPIO
 import time
 
+from threading import Timer
+
 
 # init flask application
 app = Flask(__name__)
@@ -55,6 +57,9 @@ def turn_on():
 	print('LED ON')
 	GPIO.output(18, GPIO.HIGH)
 
+	timer = Timer(time_threshold, turn_off)
+	timer.start()
+
 	return 200
 
 
@@ -68,11 +73,11 @@ def turn_off():
 
 
 if __name__ == '__main__':
-
 	GPIO.setmode(GPIO.BCM)
 	GPIO.setwarnings(False)
 	GPIO.setup(18, GPIO.OUT)
 
+	time_threshold = 5
 
 	app.run(
 		threaded=True,
