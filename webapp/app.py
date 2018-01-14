@@ -31,11 +31,7 @@ def camera():
 # raspberry pi casmera route
 @app.route('/sendphoto', methods=['POST'])
 def sendphoto():
-	# print(request.is_json)
-	# data = request.get_json()
 	file = request.files['image']
-	print(file)
-
 	file.save('../test.jpg')
 	
 	return render_template('view.html')
