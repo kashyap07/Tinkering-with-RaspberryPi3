@@ -6,64 +6,70 @@ take photo and send to server
 from time import sleep
 from picamera import PiCamera
 import requests
-import RPi.GPIO as GPIO
+# import RPi.GPIO as GPIO
 import time
+import datetime
+import picamera
+import picamera.array
+from fractions import Fraction
 
 
 '''
 motion detection part
 '''
-#!/usr/bin/python
+threshold = 30
+sensitivity = 1800
 
-import picamera
-import picamera.array
-import time
+         
+def foo():
+	print('detected!')
+    
+       
+def check_for_motion(stream1, stream2)
+	# h = 128
+	# w = 80
 
-threshold = 100    # How Much pixel changes
-sensitivity = 1000 # How many pixels change
+	h = 1024
+	w = 768
 
-def takeMotionImage(width, height):
-    with picamera.PiCamera() as camera:
-        time.sleep(1)
-        camera.resolution = (width, height)
-        with picamera.array.PiRGBArray(camera) as stream:
-            camera.exposure_mode = 'auto'
-            camera.awb_mode = 'auto'
-            camera.capture(stream, format='rgb')
-            return stream.array
+	pix_color = 1	# red=0, green=1, blue=2
+	pix_changes = 0
 
-def scanMotion(width, height):
-    motionFound = False
-    data1 = takeMotionImage(width, height)
-    while not motionFound:
-        data2 = takeMotionImage(width, height)
-        diffCount = 0L;
-        for w in range(0, width):
-            for h in range(0, height):
-                # get the diff of the pixel. Conversion to int
-                # is required to avoid unsigned short overflow.
-                diff = abs(int(data1[h][w][1]) - int(data2[h][w][1]))
-                if  diff > threshold:
-                    diffCount += 1
-            if diffCount > sensitivity:
-                break;
-        if diffCount > sensitivity:
-            motionFound = True
-        else:
-            data2 = data1
-    return motionFound
+	for w in range(0, w):
+		for h in range(0, h):
+			diff = abs(int(stream1[h][w][pix_color]) - int(stream2[h][w][pix_color]))
+			if diff > threshold:
+				pix_changes += 1
+			if pix_changes > sensitivity:
+				return True
+	
 
-def motionDetection():
-    print "Scanning for Motion "
-    while True:
-        if scanMotion(224, 160):
-            print "Motion detected"
+def get_stream_img():
+	# h = 128
+	# w = 80
 
-if __name__ == '__main__':
-    try:
-        motionDetection()
-    finally:
-        print "Exiting Program"
+	h = 1024
+	w = 768
+
+	with picamera.PiCamera() as camera:
+		time.sleep(0.5)
+		camera.resolution = (h, w)
+		with picamera.array.PiRGBArray(camera) as stream:
+			camera.capture(stream, format='rgb')
+
+			return stream.array
+
+
+def start_detection():
+	# initial stream
+	stream1 = get_stream_img()
+	while True:
+		stream2 = get_stream_img()
+		if check_for_motion(stream1, stream2):
+			foo()
+		stream1 = stream2
+	return
+
 
 '''
 capture image and save
