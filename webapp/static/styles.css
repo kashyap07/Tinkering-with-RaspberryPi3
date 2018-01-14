@@ -1,0 +1,12 @@
+.photo-view {
+	height: 100%;
+	width: 100%; 
+}
+
+.img-photo {
+	height: 384px;
+	width: 512px;
+	display: block;
+	margin: auto;
+	position: absolute;
+}

@@ -24,17 +24,19 @@ def index():
 	return render_template('index.html')
 
 # camera page web view
-@app.route('/camera')
+@app.route('/viewphoto')
 def camera():
-	pass
+	
+	
+	return render_template('view.html')
 
 # raspberry pi casmera route
 @app.route('/sendphoto', methods=['POST'])
 def sendphoto():
 	file = request.files['image']
 	file.save('../test.jpg')
-	
-	return render_template('view.html')
+
+	print('saved image test.jpg')
 
 
 if __name__ == '__main__':
