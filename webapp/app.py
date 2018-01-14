@@ -9,6 +9,9 @@ import json
 import requests
 from pprint import pprint
 
+import RPi.GPIO as GPIO
+import time
+
 
 # init flask application
 app = Flask(__name__)
@@ -27,7 +30,7 @@ def index():
 @app.route('/viewphoto')
 def camera():
 	
-	
+
 	return render_template('view.html')
 
 # raspberry pi casmera route
@@ -39,7 +42,34 @@ def sendphoto():
 	print('saved image test.jpg')
 
 
+
+@app.route('/gpio')
+def turn_on():
+	print('rendering remote gpio control page')
+
+	return render_template('remote.html')
+
+
+@app.route('/turnon')
+def turn_on():
+	print('LED ON')
+	GPIO.output(18, GPIO.HIGH)
+
+
+@app.route('/turnoff')
+def turn_off():
+	print('LED OFF')
+	GPIO.output(18, GPIO.LOW)
+
+
+
 if __name__ == '__main__':
+
+	GPIO.setmode(GPIO.BCM)
+	GPIO.setwarnings(False)
+	GPIO.setup(18, GPIO.OUT)
+
+
 	app.run(
 		threaded=True,
 		debug=True,
