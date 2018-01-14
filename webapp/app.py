@@ -43,8 +43,8 @@ def sendphoto():
 
 
 
-@app.route('/gpio')
-def turn_on():
+@app.route('/remote')
+def gpio():
 	print('rendering remote gpio control page')
 
 	return render_template('remote.html')
