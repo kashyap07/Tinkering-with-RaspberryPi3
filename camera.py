@@ -3,7 +3,6 @@ basic camera module
 take photo and send to server
 '''
 
-
 from time import sleep
 from picamera import PiCamera
 import requests
@@ -18,5 +17,5 @@ camera.capture('test.jpg')
 
 
 url = 'htpp://192.168.0.107:8000/sendphoto'
-files = {'media': open('test.jpg', 'rb')}
+files = {'image': open('test.jpg', 'rb')}
 requests.post(url, files=files)

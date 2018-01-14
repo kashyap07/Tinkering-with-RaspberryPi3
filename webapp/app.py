@@ -20,7 +20,7 @@ def index():
 	data = request.get_json()
 
 	print(data)
-	
+
 	return render_template('index.html')
 
 # camera page web view
@@ -29,16 +29,22 @@ def camera():
 	pass
 
 # raspberry pi casmera route
-@app.route('/sendphoto')
+@app.route('/sendphoto', methods=['POST'])
 def sendphoto():
-	data = request.get_json()
+	# print(request.is_json)
+	# data = request.get_json()
+	file = request.files['image']
+	print(file)
 
-	print(data)
+	file.save('../test.jpg')
+	
+	return render_template('view.html')
 
 
 if __name__ == '__main__':
 	app.run(
+		threaded=True,
 		debug=True,
-		host=('0.0.0.0'),
+		host='0.0.0.0',
 		port=8000
 	)
