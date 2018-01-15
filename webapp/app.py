@@ -18,6 +18,10 @@ from threading import Timer
 # init flask application
 app = Flask(__name__)
 
+# global var
+is_on = False
+timer = None
+
 
 # index route
 @app.route('/')
@@ -53,33 +57,44 @@ def gpio():
 	return render_template('remote.html')
 
 
+# -----------------------------------------------------------------------------
+
 @app.route('/switch')
 def switch():
-	val = request.args.get('on')
-	print(val)
+	global is_on
+	global timer
+
+	turn_on = request.args.get('on')
+	if turn_on:
+		if is_on:
+			timer.cancel()
+		else:
+			turn_on()
+			is_on = True
+
+		timer = Timer(time_threshold, turn_off)
+		timer.start()
+	else:
+		turn_off()
+		is_on = False
 
 	return render_template('blank.html')
 
 
-@app.route('/turnon')
 def turn_on():
 	print('LED ON')
 	GPIO.output(18, GPIO.HIGH)
 
-	timer = Timer(time_threshold, turn_off)
-	timer.start()
-
 	return 200
 
 
-@app.route('/turnoff')
 def turn_off():
 	print('LED OFF')
 	GPIO.output(18, GPIO.LOW)
 
 	return 200
 
-
+# -----------------------------------------------------------------------------
 
 if __name__ == '__main__':
 	GPIO.setmode(GPIO.BCM)
