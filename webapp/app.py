@@ -63,7 +63,7 @@ def switch():
 	global timer
 
 	val = request.args.get('on')
-	if val:
+	if val=="True":
 		if is_on:
 			timer.cancel()
 		else:
@@ -72,7 +72,7 @@ def switch():
 
 		timer = Timer(time_threshold, turn_off)
 		timer.start()
-	else:
+	elif val="False":
 		turn_off()
 
 	return render_template('blank.html')
