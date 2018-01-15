@@ -35,7 +35,8 @@ def camera():
 
 	return render_template('view.html')
 
-# raspberry pi casmera route
+
+# raspberry pi camera route
 @app.route('/sendphoto', methods=['POST'])
 def sendphoto():
 	file = request.files['image']
@@ -50,6 +51,14 @@ def gpio():
 	print('rendering remote gpio control page')
 
 	return render_template('remote.html')
+
+
+@app.route('/switch')
+def switch():
+	val = request.args.get('on')
+	print(val)
+
+	return render_template('blank.html')
 
 
 @app.route('/turnon')
