@@ -16,6 +16,9 @@ from threading import Timer
 
 # init flask application
 app = Flask(__name__)
+
+# redis
+app.config['REDIS_URL'] = 'redis://localhost'
 # sse
 app.register_blueprint(sse, url_prefix='/stream')
 
