@@ -55,6 +55,9 @@ def sendphoto():
 
 
 
+# -----------------------------------------------------------------------------
+# remote GPIO
+
 @app.route('/remote')
 def gpio():
 	print('rendering remote gpio control page')
@@ -62,8 +65,7 @@ def gpio():
 	return render_template('remote.html')
 
 
-# -----------------------------------------------------------------------------
-
+# uses global variable is_on which states if LED is on or not
 @app.route('/switch')
 def switch():
 	global is_on
@@ -83,30 +85,41 @@ def switch():
 		turn_off()
 		is_on = False
 
-	return render_template('blank.html')
+	return "done"
 
 
+# set port 18 high
 def turn_on():
 	print('LED ON')
 	GPIO.output(18, GPIO.HIGH)
 
 
+# let port 18 low
 def turn_off():
 	print('LED OFF')
 	GPIO.output(18, GPIO.LOW)
 
 
+# turn off and send sse that it was a success
 def sse_turn_off():
 	global is_on
 
 	turn_off()
 	is_on = False
 
-	# sse
+
+	# need to make sure this exists
+	# also, make sure that redis is running on your pi
 	with app.app_context():
+		# sse, make sure to capture as success in js
 		sse.publish({'success': 'True'}, type='success')
 
 # -----------------------------------------------------------------------------
+
+
+
+
+# main
 
 if __name__ == '__main__':
 	GPIO.setmode(GPIO.BCM)
