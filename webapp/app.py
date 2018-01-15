@@ -103,7 +103,8 @@ def sse_turn_off():
 	is_on = False
 
 	# sse
-	sse.publish({'success': 'True'}, type='success')
+	with app.app_context():
+		sse.publish({'success': 'True'}, type='success')
 
 # -----------------------------------------------------------------------------
 
