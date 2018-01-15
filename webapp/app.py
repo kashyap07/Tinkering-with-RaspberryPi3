@@ -1,8 +1,6 @@
 '''
 Home Automation System
 '''
-
-
 from flask import Flask, render_template, request, jsonify, abort
 import os
 import json
@@ -64,8 +62,8 @@ def switch():
 	global is_on
 	global timer
 
-	turn_on = request.args.get('on')
-	if turn_on:
+	val = request.args.get('on')
+	if val:
 		if is_on:
 			timer.cancel()
 		else:
