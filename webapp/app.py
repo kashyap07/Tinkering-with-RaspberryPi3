@@ -72,7 +72,7 @@ def switch():
 
 		timer = Timer(time_threshold, turn_off)
 		timer.start()
-	elif val="False":
+	elif val=="False":
 		turn_off()
 
 	return render_template('blank.html')
