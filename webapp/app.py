@@ -74,7 +74,6 @@ def switch():
 		timer.start()
 	else:
 		turn_off()
-		is_on = False
 
 	return render_template('blank.html')
 
@@ -87,8 +86,12 @@ def turn_on():
 
 
 def turn_off():
+	global is_on
+
 	print('LED OFF')
 	GPIO.output(18, GPIO.LOW)
+
+	is_on = False
 
 	return 200
 
