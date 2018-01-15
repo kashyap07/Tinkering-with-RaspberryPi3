@@ -41,6 +41,18 @@
 				$('#off-btn').addClass('btn-primary');
 			}
 
+			// sse
+			var source = new EventSource("/stream");
+			source.addEventListener('success', (event)=> {
+				var data = JSON.parse(event.data);
+				console.log(data);
+
+				// make off primary
+				$('#on-btn').removeClass('btn-primary');
+				$('#off-btn').addClass('btn-primary');
+
+			}, false);
+
 		</script>
 	</body>
 </html>

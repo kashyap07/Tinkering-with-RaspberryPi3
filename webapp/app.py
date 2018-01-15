@@ -2,6 +2,7 @@
 Home Automation System
 '''
 from flask import Flask, render_template, request, jsonify, abort
+from flask_sse import sse
 import os
 import json
 import requests
@@ -15,6 +16,9 @@ from threading import Timer
 
 # init flask application
 app = Flask(__name__)
+# sse
+app.register_blueprint(sse, url_prefix='/stream')
+
 
 # global var
 is_on = False
@@ -70,10 +74,11 @@ def switch():
 			turn_on()
 			is_on = True
 
-		timer = Timer(time_threshold, turn_off)
+		timer = Timer(time_threshold, sse_turn_off)
 		timer.start()
 	elif val=="False":
 		turn_off()
+		is_on = False
 
 	return render_template('blank.html')
 
@@ -82,18 +87,20 @@ def turn_on():
 	print('LED ON')
 	GPIO.output(18, GPIO.HIGH)
 
-	return 200
-
 
 def turn_off():
-	global is_on
-
 	print('LED OFF')
 	GPIO.output(18, GPIO.LOW)
 
+
+def sse_turn_off():
+	global is_on
+
+	turn_off()
 	is_on = False
 
-	return 200
+	# sse
+	sse.publish({'success': 'True'}, type='success')
 
 # -----------------------------------------------------------------------------
 
