@@ -24,8 +24,8 @@ app = Flask(__name__)
 # redis
 app.config['REDIS_URL'] = 'redis://localhost'
 # sse
-app.register_blueprint(sse, url_prefix='/stream')
-app.register_blueprint(sse2, url_prefix='/stream2')
+# app.register_blueprint(sse, url_prefix='/stream')
+app.register_blueprint(sse, url_prefix='/stream2')
 
 
 # global var
@@ -119,24 +119,40 @@ def sse_turn_off():
 
 @app.route('/gas')
 def gas():
-	try:
-		print("Press CTRL+C to abort.")
+	print("Press CTRL+C to abort.")
 
-		mq = MQ();
-		while True:
-			perc = mq.MQPercentage()
-			sys.stdout.write("\r")
-			sys.stdout.write("\033[K")
-			sys.stdout.write("LPG: %g ppm, CO: %g ppm, Smoke: %g ppm" % (perc["GAS_LPG"], perc["CO"], perc["SMOKE"]))
-			sys.stdout.flush()
-			time.sleep(0.1)
+	mq = MQ();
+	while True:
+		perc = mq.MQPercentage()
+		sys.stdout.write("\r")
+		sys.stdout.write("\033[K")
+		sys.stdout.write("LPG: %g ppm, CO: %g ppm, Smoke: %g ppm" % (perc["GAS_LPG"], perc["CO"], perc["SMOKE"]))
+		sys.stdout.flush()
+		time.sleep(0.1)
 
-			# if > some level
-			# call function
-			# sse_leakage_detected()
+		# if > some level
+		# call function
+		# sse_leakage_detected()
+	# try:
+	# 	print("Press CTRL+C to abort.")
 
-	except:
-		print("\nAbort by user")
+	# 	mq = MQ();
+	# 	while True:
+	# 		perc = mq.MQPercentage()
+	# 		sys.stdout.write("\r")
+	# 		sys.stdout.write("\033[K")
+	# 		sys.stdout.write("LPG: %g ppm, CO: %g ppm, Smoke: %g ppm" % (perc["GAS_LPG"], perc["CO"], perc["SMOKE"]))
+	# 		sys.stdout.flush()
+	# 		time.sleep(0.1)
+
+	# 		# if > some level
+	# 		# call function
+	# 		# sse_leakage_detected()
+
+	# except:
+	# 	print("\nAbort by user")
+
+	return "success"
 
 
 def sse_leakage_detected():
