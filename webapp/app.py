@@ -4,6 +4,7 @@ Home Automation System
 from flask import Flask, render_template, request, jsonify, abort
 from flask_sse import sse
 import os
+import sys
 import json
 import requests
 from pprint import pprint
@@ -13,6 +14,9 @@ import time
 
 from threading import Timer
 
+from mq import *
+
+
 
 # init flask application
 app = Flask(__name__)
@@ -21,10 +25,12 @@ app = Flask(__name__)
 app.config['REDIS_URL'] = 'redis://localhost'
 # sse
 app.register_blueprint(sse, url_prefix='/stream')
+app.register_blueprint(sse2, url_prefix='/stream2')
 
 
 # global var
 is_on = False
+is_leaked = False
 timer = None
 
 
@@ -41,7 +47,6 @@ def index():
 @app.route('/viewphoto')
 def camera():
 	
-
 	return render_template('view.html')
 
 
@@ -57,13 +62,6 @@ def sendphoto():
 
 # -----------------------------------------------------------------------------
 # remote GPIO
-
-@app.route('/remote')
-def gpio():
-	print('rendering remote gpio control page')
-
-	return render_template('remote.html')
-
 
 # uses global variable is_on which states if LED is on or not
 @app.route('/switch')
@@ -113,6 +111,38 @@ def sse_turn_off():
 	with app.app_context():
 		# sse, make sure to capture as success in js
 		sse.publish({'success': 'True'}, type='success')
+
+
+# -----------------------------------------------------------------------------
+# gas stuff
+
+
+@app.route('/gas')
+def gas():
+	try:
+		print("Press CTRL+C to abort.")
+
+		mq = MQ();
+		while True:
+			perc = mq.MQPercentage()
+			sys.stdout.write("\r")
+			sys.stdout.write("\033[K")
+			sys.stdout.write("LPG: %g ppm, CO: %g ppm, Smoke: %g ppm" % (perc["GAS_LPG"], perc["CO"], perc["SMOKE"]))
+			sys.stdout.flush()
+			time.sleep(0.1)
+
+			# if > some level
+			# call function
+			# sse_leakage_detected()
+
+	except:
+		print("\nAbort by user")
+
+
+def sse_leakage_detected():
+	with app.app_context():
+		sse2.publish({'leakage': 'True'}, type='leakage')
+
 
 # -----------------------------------------------------------------------------
 
